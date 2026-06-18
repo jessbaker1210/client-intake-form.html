@@ -1,0 +1,107 @@
+name: Create Issue from Client Intake
+
+on:
+  repository_dispatch:
+    types: [client-intake]
+
+jobs:
+  create-issue:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+
+    steps:
+      - name: Create GitHub Issue
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const d = context.payload.client_payload;
+
+            // Helper: return value or "—" if blank
+            const v = (key) => d[key] || '—';
+
+            const body = `
+## Client Intake Submission
+
+### 1. Client Information
+| Field | Value |
+|-------|-------|
+| **Company** | ${v('company')} |
+| **Contact Name** | ${v('contact_name')} |
+| **Email** | ${v('email')} |
+| **Phone** | ${v('phone')} |
+| **Industry** | ${v('industry')} |
+| **Est. Participants** | ${v('participants')} |
+
+### 2. Program Type
+${v('program_type')}
+
+### 3. Registration & User Setup
+| Field | Value |
+|-------|-------|
+| **Registration Type** | ${v('registration_type')} |
+| **Multi-User Roles** | ${v('multi_user_roles')} |
+| **Languages** | ${v('languages')} |
+| **Custom Registration Notes** | ${v('custom_registration')} |
+
+### 4. Claims Configuration
+| Field | Value |
+|-------|-------|
+| **Claim Methods** | ${v('claim_methods')} |
+| **Custom Workflow** | ${v('custom_claim_workflow')} |
+| **Claim Approval Queue** | ${v('claim_approval_queue')} |
+| **Dealer Approval Queue** | ${v('dealer_approval_queue')} |
+| **Custom Workflow Details** | ${v('custom_claim_desc')} |
+
+### 5. Products & Rewards
+| Field | Value |
+|-------|-------|
+| **Incentive Structure** | ${v('incentive_structure')} |
+| **Reward Options** | ${v('rewards')} |
+| **All Promo Types** | ${v('all_promo_types')} |
+
+### 6. Reporting & Dashboard
+${v('reports')}
+
+### 7. Admin & Integrations
+| Field | Value |
+|-------|-------|
+| **SSO** | ${v('sso')} |
+| **API Integration** | ${v('api_integration')} |
+| **File Feeds** | ${v('file_feeds')} |
+| **Email Campaigns** | ${v('email_campaigns')} |
+| **Dealer List Mgmt** | ${v('dealer_list')} |
+| **Dealer List Details** | ${v('dealer_list_details')} |
+
+### 8. Optional Add-Ons
+${v('addons')}
+
+### 9. Resources & Content
+| Field | Value |
+|-------|-------|
+| **Resource Pages** | ${v('resources')} |
+| **How-To Format** | ${v('howto_format')} |
+
+### 10. Timeline & Notes
+| Field | Value |
+|-------|-------|
+| **Target Launch Date** | ${v('launch_date')} |
+| **Duration** | ${v('duration')} |
+| **Additional Notes** | ${v('notes')} |
+`;
+
+            // Build the issue title
+            const company = d.company || 'Unknown Company';
+            const programs = d.program_type || 'Unspecified';
+            const title = `Client Intake: ${company} – ${programs}`;
+
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: title,
+              body: body,
+              labels: ['client-intake']
+            });
+
+            console.log(`Issue created: ${title}`);

@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Incentive Platform – Client Intake Form</title>
+<style>
+  :root{--primary:#1a3c6e;--accent:#2d7dd2;--surface:#f8fafc;--border:#d0d5dd;--text:#1e293b;--muted:#64748b;--success:#16a34a;--white:#fff;--danger:#dc2626}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Segoe UI',Arial,sans-serif;background:var(--surface);color:var(--text)}
+  .form-container{max-width:860px;margin:32px auto;background:var(--white);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+  .form-header{background:var(--primary);color:var(--white);padding:28px 32px}
+  .form-header h1{font-size:22px;font-weight:600;margin-bottom:4px}
+  .form-header p{font-size:13px;opacity:.85}
+  .form-body{padding:28px 32px}
+  .section{margin-bottom:28px}
+  .section-title{font-size:16px;font-weight:600;color:var(--primary);border-bottom:2px solid var(--accent);padding-bottom:6px;margin-bottom:16px}
+  .section-desc{font-size:12px;color:var(--muted);margin-bottom:12px}
+  .field{margin-bottom:14px}
+  .field label{display:block;font-size:13px;font-weight:600;margin-bottom:4px}
+  .field .hint{font-size:11px;color:var(--muted);margin-bottom:4px}
+  .field input[type="text"],.field input[type="email"],.field input[type="tel"],.field input[type="date"],.field input[type="number"],.field select,.field textarea{width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:4px;font-size:13px;font-family:inherit}
+  .field textarea{resize:vertical;min-height:60px}
+  .row{display:flex;gap:16px}
+  .row>.field{flex:1}
+  .required::after{content:' *';color:var(--danger)}
+  .check-group{display:flex;flex-wrap:wrap;gap:6px 20px;margin-top:4px}
+  .check-group label{font-weight:400;font-size:13px;display:flex;align-items:center;gap:5px;cursor:pointer}
+  .form-actions{display:flex;gap:12px;justify-content:flex-end;padding:20px 32px;border-top:1px solid var(--border);background:var(--surface)}
+  .btn{padding:10px 24px;border-radius:4px;font-size:14px;font-weight:600;cursor:pointer;border:none;transition:opacity .2s}
+  .btn:disabled{opacity:.5;cursor:not-allowed}
+  .btn-primary{background:var(--accent);color:var(--white)}
+  .btn-secondary{background:var(--white);color:var(--text);border:1px solid var(--border)}
+  #statusMsg{display:none;text-align:center;padding:40px 32px}
+  #statusMsg h2{margin-bottom:8px}
+  #statusMsg.success h2{color:var(--success)}
+  #statusMsg.error h2{color:var(--danger)}
+  #statusMsg p{color:var(--muted);font-size:14px}
+  .spinner{display:inline-block;width:18px;height:18px;border:2px solid var(--white);border-top-color:transparent;border-radius:50%;animation:spin .6s linear infinite;vertical-align:middle;margin-right:6px}
+  @keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<div class="form-container">
+  <div class="form-header">
+    <h1>Incentive Platform – Client Intake Form</h1>
+    <p>Complete this form to configure your Spiff, Rebate, or Contractor Loyalty incentive program.</p>
+  </div>
+
+  <form id="intakeForm">
+  <div class="form-body">
+
+    <!-- SECTION 1: Client Information -->
+    <div class="section">
+      <div class="section-title">1. Client Information</div>
+      <div class="row">
+        <div class="field"><label class="required">Company Name</label><input type="text" name="company" required></div>
+        <div class="field"><label class="required">Primary Contact Name</label><input type="text" name="contact_name" required></div>
+      </div>
+      <div class="row">
+        <div class="field"><label class="required">Contact Email</label><input type="email" name="email" required></div>
+        <div class="field"><label>Contact Phone</label><input type="tel" name="phone"></div>
+      </div>
+      <div class="row">
+        <div class="field"><label>Industry / Vertical</label><input type="text" name="industry" placeholder="e.g., Animal Health, Building Products"></div>
+        <div class="field"><label class="required">Estimated Number of Participants</label><input type="number" name="participants" min="1" required></div>
+      </div>
+    </div>
+
+    <!-- SECTION 2: Program Type -->
+    <div class="section">
+      <div class="section-title">2. Program Type</div>
+      <div class="field">
+        <label class="required">Which program type(s) do you need?</label>
+        <div class="check-group">
+          <label><input type="checkbox" name="program_type" value="Spiff"> Spiff</label>
+          <label><input type="checkbox" name="program_type" value="Rebate"> Rebate</label>
+          <label><input type="checkbox" name="program_type" value="Contractor Loyalty"> Contractor Loyalty</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 3: Registration & User Setup -->
+    <div class="section">
+      <div class="section-title">3. Registration & User Setup</div>
+      <div class="row">
+        <div class="field">
+          <label class="required">Registration Type</label>
+          <select name="registration_type" required>
+            <option value="">Select...</option>
+            <option value="Standard">Standard</option>
+            <option value="Customized">Customized</option>
+          </select>
+        </div>
+        <div class="field">
+          <label class="required">Multi-User Roles Needed?</label>
+          <select name="multi_user_roles" required>
+            <option value="">Select...</option>
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+          </select>
+        </div>
+      </div>
+      <div class="field"><label>If Customized, describe requirements</label><textarea name="custom_registration" placeholder="Describe custom registration requirements..."></textarea></div>
+      <div class="field"><label class="required">Language(s) Needed</label><input type="text" name="languages" value="English" required><div class="hint">Default is English. List any additional languages.</div></div>
+    </div>
+
+    <!-- SECTION 4: Claims Configuration -->
+    <div class="section">
+      <div class="section-title">4. Claims Configuration</div>
+      <div class="field">
+        <label class="required">Which claim methods do you need?</label>
+        <div class="check-group">
+          <label><input type="checkbox" name="claim_methods" value="Submit Claim (online)"> Submit Claim (online)</label>
+          <label><input type="checkbox" name="claim_methods" value="Mail-In Claims"> Mail-In Claims</label>
+          <label><input type="checkbox" name="claim_methods" value="Bulk Upload (from template)"> Bulk Upload (from template)</label>
+          <label><input type="checkbox" name="claim_methods" value="Serial Number Validation"> Serial Number Validation</label>
+          <label><input type="checkbox" name="claim_methods" value="Select Offer / Enter Offer"> Select Offer / Enter Offer</label>
+          <label><input type="checkbox" name="claim_methods" value="Enter Purchase Date"> Enter Purchase Date</label>
+          <label><input type="checkbox" name="claim_methods" value="Check Rebate Status"> Check Rebate Status</label>
+          <label><input type="checkbox" name="claim_methods" value="Invoice Data Capture"> Invoice Data Capture</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="field">
+          <label>Custom Claim Submission Workflow?</label>
+          <select name="custom_claim_workflow">
+            <option value="No">No</option>
+            <option value="Yes">Yes (describe below)</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Claim Approval Queue?</label>
+          <select name="claim_approval_queue">
+            <option value="No">No</option>
+            <option value="Yes">Yes</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Dealer Approval Queue?</label>
+          <select name="dealer_approval_queue">
+            <option value="No">No</option>
+            <option value="Yes">Yes</option>
+          </select>
+        </div>
+      </div>
+      <div class="field"><label>Describe custom claim workflow</label><textarea name="custom_claim_desc" placeholder="If you selected Yes above, describe the workflow..."></textarea></div>
+    </div>
+
+    <!-- SECTION 5: Products & Rewards -->
+    <div class="section">
+      <div class="section-title">5. Products & Rewards</div>
+      <div class="field">
+        <label class="required">How should incentives be structured?</label>
+        <select name="incentive_structure" required>
+          <option value="">Select...</option>
+          <option value="Points by Product">Points by Product</option>
+          <option value="Dollars by Product">Dollars by Product</option>
+        </select>
+      </div>
+      <div class="field">
+        <label class="required">Which reward / redemption options do you need?</label>
+        <div class="check-group">
+          <label><input type="checkbox" name="rewards" value="Card Redemption"> Card Redemption</label>
+          <label><input type="checkbox" name="rewards" value="Points / Banking"> Points / Banking (redeem at convenience)</label>
+          <label><input type="checkbox" name="rewards" value="Merchandise Catalog"> Merchandise Catalog (with concierge)</label>
+        </div>
+      </div>
+      <div class="field">
+        <label>Are all promotion types included?</label>
+        <select name="all_promo_types">
+          <option value="Yes">Yes</option>
+          <option value="No">No</option>
+          <option value="Unsure">Unsure</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- SECTION 6: Reporting & Dashboard -->
+    <div class="section">
+      <div class="section-title">6. Reporting & Dashboard</div>
+      <div class="field">
+        <label>Which reports do you need?</label>
+        <div class="check-group">
+          <label><input type="checkbox" name="reports" value="Dashboard (customizable)"> Dashboard (customizable layout & filters)</label>
+          <label><input type="checkbox" name="reports" value="Report Scheduler"> Report Scheduler</label>
+          <label><input type="checkbox" name="reports" value="Report Builder / Filter Choices"> Report Builder / Filter Choices</label>
+          <label><input type="checkbox" name="reports" value="Account Statement"> Account Statement</label>
+          <label><input type="checkbox" name="reports" value="Adjustment Report"> Adjustment Report</label>
+          <label><input type="checkbox" name="reports" value="Claim Summary Report"> Claim Summary Report</label>
+          <label><input type="checkbox" name="reports" value="Redemption Report"> Redemption Report</label>
+          <label><input type="checkbox" name="reports" value="Call Log Report"> Call Log Report</label>
+          <label><input type="checkbox" name="reports" value="User Report"> User Report</label>
+          <label><input type="checkbox" name="reports" value="Registration Report"> Registration Report</label>
+          <label><input type="checkbox" name="reports" value="Claim Transmission Status Report"> Claim Transmission Status Report</label>
+          <label><input type="checkbox" name="reports" value="Payment Recon Report"> Payment Recon Report</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 7: Admin & Integrations -->
+    <div class="section">
+      <div class="section-title">7. Admin & Integrations</div>
+      <div class="row">
+        <div class="field">
+          <label>Single Sign-On (SSO)?</label>
+          <select name="sso">
+            <option value="No">No</option>
+            <option value="Yes">Yes (~$2,500 depending on type)</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>API Integration?</label>
+          <select name="api_integration">
+            <option value="No">No</option>
+            <option value="Yes">Yes (~$3,500 per, depending on complexity)</option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="field">
+          <label>How many file feeds?</label>
+          <select name="file_feeds">
+            <option value="None">None</option>
+            <option value="1-2 (included)">1–2 (included in setup)</option>
+            <option value="3+ (additional)">3+ (additional at $1,500/feed)</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Email Campaign Management?</label>
+          <select name="email_campaigns">
+            <option value="No">No</option>
+            <option value="Yes">Yes</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label>Dealer List Management?</label>
+        <select name="dealer_list">
+          <option value="No">No</option>
+          <option value="Yes">Yes</option>
+        </select>
+      </div>
+      <div class="field"><label>Dealer list details (upload new dealers, etc.)</label><textarea name="dealer_list_details" placeholder="Describe dealer management needs..."></textarea></div>
+    </div>
+
+    <!-- SECTION 8: Optional Add-Ons -->
+    <div class="section">
+      <div class="section-title">8. Optional Add-Ons</div>
+      <div class="section-desc">Select any optional features. Pricing shown where applicable.</div>
+      <div class="field">
+        <div class="check-group">
+          <label><input type="checkbox" name="addons" value="Merchandise Catalog"> Merchandise Catalog (setup $8,625 + $750/mo up to 10K users)</label>
+          <label><input type="checkbox" name="addons" value="Survey"> Survey</label>
+          <label><input type="checkbox" name="addons" value="Leaderboard"> Leaderboard</label>
+          <label><input type="checkbox" name="addons" value="Message Center"> Message Center / Message Center Management</label>
+          <label><input type="checkbox" name="addons" value="Carousel / Tile Management"> Carousel / Tile Management</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 9: Resources & Content -->
+    <div class="section">
+      <div class="section-title">9. Resources & Content</div>
+      <div class="field">
+        <label>Which resource pages should be included?</label>
+        <div class="check-group">
+          <label><input type="checkbox" name="resources" value="FAQs"> FAQs</label>
+          <label><input type="checkbox" name="resources" value="Terms & Conditions"> Terms & Conditions</label>
+          <label><input type="checkbox" name="resources" value="How-To Guide"> How-To Guide</label>
+          <label><input type="checkbox" name="resources" value="Privacy Policy"> Privacy Policy</label>
+          <label><input type="checkbox" name="resources" value="Program Rules"> Program Rules</label>
+          <label><input type="checkbox" name="resources" value="Contact Us"> Contact Us</label>
+          <label><input type="checkbox" name="resources" value="Promotion Flyers"> Promotion Flyers</label>
+        </div>
+      </div>
+      <div class="field">
+        <label>How-To Guide Format</label>
+        <select name="howto_format">
+          <option value="PDF only">PDF only</option>
+          <option value="Video">Video</option>
+          <option value="Both">Both</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- SECTION 10: Timeline & Notes -->
+    <div class="section">
+      <div class="section-title">10. Timeline & Notes</div>
+      <div class="row">
+        <div class="field"><label class="required">Target Launch Date</label><input type="date" name="launch_date" required></div>
+        <div class="field"><label>Expected Program Duration</label><input type="text" name="duration" placeholder='e.g., "12 months", "Ongoing"'></div>
+      </div>
+      <div class="field"><label>Additional Notes or Requirements</label><textarea name="notes" rows="4" placeholder="Any other details we should know..."></textarea></div>
+    </div>
+
+  </div><!-- /.form-body -->
+
+  <div class="form-actions">
+    <button type="button" class="btn btn-secondary" onclick="window.print()">Print / Save PDF</button>
+    <button type="submit" class="btn btn-primary" id="submitBtn">Submit Intake Form</button>
+  </div>
+  </form>
+
+  <div id="statusMsg">
+    <h2 id="statusTitle"></h2>
+    <p id="statusText"></p>
+    <br>
+    <button class="btn btn-secondary" onclick="location.reload()" style="display:none" id="retryBtn">Submit Another</button>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// CONFIGURATION — Update these two values for your repo
+// ============================================================
+var REPO_OWNER = 'YOUR_GITHUB_USERNAME';   // e.g. 'jsmith'
+var REPO_NAME  = 'client-intake';          // your repo name
+
+// This token only needs `public_repo` scope (classic) or
+// Repository permissions > Contents: Read & Write (fine-grained).
+// It does NOT need Issues permission — the Action creates the issue.
+var DISPATCH_TOKEN = 'ghp_YOUR_TOKEN_HERE';
+// ============================================================
+
+function collectFormData(form) {
+  var fd = new FormData(form);
+  var data = {};
+  for (var pair of fd.entries()) {
+    var key = pair[0], val = pair[1];
+    if (data[key]) {
+      if (!Array.isArray(data[key])) data[key] = [data[key]];
+      data[key].push(val);
+    } else {
+      data[key] = val;
+    }
+  }
+  // Convert arrays to comma-separated strings for the issue body
+  for (var k in data) {
+    if (Array.isArray(data[k])) data[k] = data[k].join(', ');
+  }
+  return data;
+}
+
+document.getElementById('intakeForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+
+  // Validate at least one program type is checked
+  var checked = document.querySelectorAll('input[name="program_type"]:checked');
+  if (checked.length === 0) {
+    alert('Please select at least one Program Type.');
+    return;
+  }
+
+  var btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Submitting...';
+
+  var data = collectFormData(this);
+
+  // Send repository_dispatch event — the Action will create the issue
+  fetch('https://api.github.com/repos/' + REPO_OWNER + '/' + REPO_NAME + '/dispatches', {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/vnd.github.v3+json',
+      'Authorization': 'token ' + DISPATCH_TOKEN
+    },
+    body: JSON.stringify({
+      event_type: 'client-intake',
+      client_payload: data
+    })
+  })
+  .then(function(resp) {
+    if (resp.status === 204) {
+      document.getElementById('intakeForm').style.display = 'none';
+      var msg = document.getElementById('statusMsg');
+      msg.className = 'success';
+      msg.style.display = 'block';
+      document.getElementById('statusTitle').textContent = 'Intake Form Submitted';
+      document.getElementById('statusText').textContent =
+        'Thank you, ' + (data.contact_name || '') + '. A GitHub Issue has been created for ' + (data.company || 'your company') + '. Your team will be in touch.';
+      document.getElementById('retryBtn').style.display = 'inline-block';
+    } else {
+      throw new Error('GitHub returned status ' + resp.status);
+    }
+  })
+  .catch(function(err) {
+    document.getElementById('intakeForm').style.display = 'none';
+    var msg = document.getElementById('statusMsg');
+    msg.className = 'error';
+    msg.style.display = 'block';
+    document.getElementById('statusTitle').textContent = 'Submission Failed';
+    document.getElementById('statusText').textContent =
+      'Error: ' + err.message + '. Please try again or contact your administrator.';
+    document.getElementById('retryBtn').style.display = 'inline-block';
+  });
+});
+</script>
+</body>
+</html>
